@@ -1,14 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware, combineReducers} from 'redux';
+import {createLogger} from 'redux-logger';
+import thunkMiddleware from 'redux-thunk';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import App from './containers/App';
 import 'tachyons';
-import {searchRobots} from './reducers';
+import {searchRobots, requestRobots} from './reducers';
 
-const store = createStore(searchRobots);
+// create a middleware
+const logger = createLogger();
+
+const rootReducer = combineReducers({searchRobots,requestRobots});
+//apply the middleware while creating the store.
+//Thunkmiddleware is to perform async operations in the app.
+const store = createStore(rootReducer,applyMiddleware(thunkMiddleware,logger));
 
 ReactDOM.render(
 	<Provider store = {store} >
